@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function startAutoSlide() {
     slideInterval = setInterval(() => {
       navigateForward();
-    }, 3500);
+    }, 4000); // Increased duration for smoother transition
   }
 
   function navigateForward() {
@@ -42,10 +42,16 @@ document.addEventListener('DOMContentLoaded', () => {
     popupImage.classList.add(animationClass);
 
     setTimeout(() => {
-      currentIndex = index;
-      popupImage.src = images[currentIndex].src;
-      updateArrows();
-      updateDots();
+      popupImage.style.transition = 'opacity 1s ease-in-out'; // Smooth transition
+      popupImage.style.opacity = '0';
+      
+      setTimeout(() => {
+        currentIndex = index;
+        popupImage.src = images[currentIndex].src;
+        popupImage.style.opacity = '1';
+        updateArrows();
+        updateDots();
+      }, 500);
     }, 200);
   }
 
@@ -65,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     img.addEventListener('click', () => {
       if (!isPopupOpen) {
         currentIndex = index;
+        popupImage.src = images[currentIndex].src; // Ensure correct image appears
         updatePopupImage(currentIndex, 'next');
         popup.style.display = 'flex';
         mainContainer.style.opacity = '0.3';
@@ -78,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     popup.style.display = 'none';
     mainContainer.style.opacity = '1';
     isPopupOpen = false;
-    stopAutoSlide();
+    clearInterval(slideInterval);
   });
 
   forwardButton.addEventListener('click', () => {
