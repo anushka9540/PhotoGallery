@@ -4,26 +4,33 @@
     box-sizing: border-box;
 }
 
-.outer-container{
+body{
+    background: rgba(50, 75, 112, 0.5);
+}
+
+.outer-container {
     height: 100vh;
     width: 100%;
+}
+
+h1 {
+    text-align: center;
 }
 
 .main-container {
+    padding: 35px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    gap: 2px;
-    height: 100vh;
-    width: 100%;
+    gap: 10px;
 }
 
-
-
 .main-container img {
-    height: 180px;
+    height: 143.2px;
     width: 150px;
-    border: 2px solid black;
+    border: 1px solid black;
+    cursor: pointer;
+    border-radius: 10px;
 }
 
 .popup-image {
@@ -33,27 +40,138 @@
     background-size: cover;
     background-repeat: no-repeat;
     align-content: center;
-    
+    max-width: 90%;
+    max-height: 90vh;
+    object-fit: contain;
+    display: block;
+    margin: auto;
+    transition: transform 0.5s ease-in-out;
     
 }
+
 
 i {
     cursor: pointer;
 }
 
-.backward {
+.backward, .forward {
     color: white;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 24px;
+    border-radius: 50%;
 }
 
-button {
-    
-   position: relative;
-   left: 900px;
-   bottom: 300px;
-   padding: 10px;
-   border-radius: 50%;
+.backward {
+    left: 20px;
 }
 
 .forward {
-    color: white;
+    right: 20px;
 }
+
+button{
+    position: relative;
+    left: 750px;
+    bottom: 300px;
+    padding: 10px;
+}
+
+.popup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.popup-dots {
+    position: absolute;
+    bottom: 55px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.dot:hover,
+.dot.active {
+    background-color: white;
+}
+
+/* Swapping effect */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 0.1;
+        transform: translateX(0);
+    }
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.8s ease-in-out;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.8s ease-in-out;
+}
+
+@media screen and (max-width: 600px) {
+    .popup-image {
+        height: auto;
+        width: 90%;
+        max-width: 90%;
+        max-height: 60vh;
+    }
+
+    .backward {
+        left: 10px;
+    }
+
+    .forward {
+        right: 10px;
+    }
+
+    button.close-button {
+        position: relative;
+        left: 100px;
+        bottom: 300px;
+        padding: 10px;
+    }
+}
+
+
+
