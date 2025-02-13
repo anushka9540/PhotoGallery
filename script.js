@@ -1,5 +1,3 @@
-const { FacebookAuthProvider } = require("firebase/auth/web-extension");
-
 document.addEventListener('DOMContentLoaded', () => {
   const images = document.querySelectorAll('.main-container img');
   const popup = document.querySelector('.popup');
@@ -21,10 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     slideInterval = setInterval(() => {
       navigateForward();
     }, 3500);
-  }
-
-  function stopAutoSlide() {
-    clearInterval(slideInterval);
   }
 
   function navigateForward() {
@@ -88,12 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   forwardButton.addEventListener('click', () => {
-    stopAutoSlide();
     navigateForward();
   });
 
   backwardButton.addEventListener('click', () => {
-    stopAutoSlide();
     navigateBackward();
   });
 
@@ -130,5 +122,3 @@ document.addEventListener('DOMContentLoaded', () => {
   updateArrows();
   updateDots();
 });
-
-
