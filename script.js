@@ -14,7 +14,12 @@ const imageSources = [
   './images/pic6.jpg',
   './images/pic7.jpg',
   './images/pic8.jpg',
-  './images/pic9.jpg'
+  './images/pic9.jpg',
+  './images/img2.jpg',
+  './images/img3.jpg',
+  './images/img4.jpg',
+  './images/img5.jpg',
+  './images/img6.jpg'
 ];
 
 const mainContainer = document.querySelector('.main-container');
@@ -26,7 +31,6 @@ const nextButton = document.querySelector('.forward');
 const sliderDots = document.querySelector('.slider-dots');
 
 let currentIndex = 0;
-let slideshowInterval;
 
 imageSources.forEach((src, index) => {
   const img = document.createElement('img');
@@ -42,12 +46,10 @@ function openPopup(index) {
   popup.style.display = 'flex';
   updateNavigationButtons();
   createDots();
-  startSlideshow();
 }
 
 function closePopup() {
   popup.style.display = 'none';
-  stopSlideshow();
 }
 
 function updateNavigationButtons() {
@@ -91,22 +93,6 @@ function updateDots() {
   document.querySelectorAll('.dot').forEach((dot, index) => {
     dot.classList.toggle('active', index === currentIndex);
   });
-}
-
-function startSlideshow() {
-  stopSlideshow();
-  slideshowInterval = setInterval(() => {
-    if (currentIndex < imageSources.length - 1) {
-      showNextImage();
-    } else {
-      currentIndex = 0;
-      updateImage();
-    }
-  }, 3000);
-}
-
-function stopSlideshow() {
-  clearInterval(slideshowInterval);
 }
 
 closeButton.addEventListener('click', closePopup);
