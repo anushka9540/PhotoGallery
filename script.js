@@ -99,12 +99,6 @@ closeButton.addEventListener('click', closePopup);
 prevButton.addEventListener('click', showPrevImage);
 nextButton.addEventListener('click', showNextImage);
 
-popup.addEventListener('click', (e) => {
-  if (e.target === popup) {
-    closePopup();
-  }
-});
-
 document.addEventListener('keydown', (e) => {
   if (popup.style.display === 'flex') {
     if (e.key === 'ArrowLeft') {
