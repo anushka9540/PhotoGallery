@@ -1,131 +1,132 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const images = document.querySelectorAll('.main-container img');
-  const popup = document.querySelector('.popup');
-  const popupImage = document.querySelector('.popup-image');
-  const closeButton = document.querySelector('.popup button');
-  const forwardButton = document.querySelector('.forward');
-  const backwardButton = document.querySelector('.backward');
-  const mainContainer = document.querySelector('.main-container');
+const imageSources = [
+  './images/mb3.jpg',
+  './images/pic10.jpg',
+  './images/gp2.jpg',
+  './images/panda1.webp',
+  './images/ob2.jpg',
+  './images/mb4.jpg',
+  './images/mb1.webp',
+  './images/dr1.jpg',
+  './images/dr5.webp',
+  './images/dr4.webp',
+  './images/gp1.jpg',
+  './images/img1.jpg',
+  './images/pic6.jpg',
+  './images/pic7.jpg',
+  './images/pic8.jpg',
+  './images/pic9.jpg'
+];
 
-  let currentIndex = 0;
-  let isPopupOpen = false;
-  let slideInterval;
+const mainContainer = document.querySelector('.main-container');
+const popup = document.querySelector('.popup');
+const popupImage = document.querySelector('.popup-image');
+const closeButton = document.querySelector('.popup .close-btn');
+const prevButton = document.querySelector('.backward');
+const nextButton = document.querySelector('.forward');
+const sliderDots = document.querySelector('.slider-dots');
 
-  const popupDotsContainer = document.createElement('div');
-  popupDotsContainer.classList.add('popup-dots');
-  popup.appendChild(popupDotsContainer);
+let currentIndex = 0;
+let slideshowInterval;
 
-  function startAutoSlide() {
-    slideInterval = setInterval(() => {
-      navigateForward();
-    }, 4000); // Increased duration for smoother transition
+imageSources.forEach((src, index) => {
+  const img = document.createElement('img');
+  img.src = src;
+  img.alt = `Image ${index + 1}`;
+  img.addEventListener('click', () => openPopup(index));
+  mainContainer.appendChild(img);
+});
+
+function openPopup(index) {
+  currentIndex = index;
+  popupImage.src = imageSources[currentIndex];
+  popup.style.display = 'flex';
+  updateNavigationButtons();
+  createDots();
+  startSlideshow();
+}
+
+function closePopup() {
+  popup.style.display = 'none';
+  stopSlideshow();
+}
+
+function updateNavigationButtons() {
+  prevButton.style.display = currentIndex === 0 ? 'none' : 'block';
+  nextButton.style.display =
+    currentIndex === imageSources.length - 1 ? 'none' : 'block';
+}
+
+function showPrevImage() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    updateImage();
   }
+}
 
-  function navigateForward() {
-    let nextIndex = (currentIndex + 1) % images.length;
-    updatePopupImage(nextIndex, 'next');
+function showNextImage() {
+  if (currentIndex < imageSources.length - 1) {
+    currentIndex++;
+    updateImage();
   }
+}
 
-  function navigateBackward() {
-    let prevIndex = (currentIndex - 1 + images.length) % images.length;
-    updatePopupImage(prevIndex, 'prev');
-  }
+function updateImage() {
+  popupImage.src = imageSources[currentIndex];
+  updateNavigationButtons();
+  updateDots();
+}
 
-  function updatePopupImage(index, direction) {
-    if (index === currentIndex) return;
-
-    const animationClass =
-      direction === 'next' ? 'slide-in-left' : 'slide-in-right';
-
-    popupImage.classList.remove('slide-in-left', 'slide-in-right');
-    void popupImage.offsetWidth;
-    popupImage.classList.add(animationClass);
-
-    setTimeout(() => {
-      popupImage.style.transition = 'opacity 1s ease-in-out'; // Smooth transition
-      popupImage.style.opacity = '0';
-      
-      setTimeout(() => {
-        currentIndex = index;
-        popupImage.src = images[currentIndex].src;
-        popupImage.style.opacity = '1';
-        updateArrows();
-        updateDots();
-      }, 500);
-    }, 200);
-  }
-
-  function updateArrows() {
-    backwardButton.style.display = currentIndex === 0 ? 'none' : 'block';
-    forwardButton.style.display =
-      currentIndex === images.length - 1 ? 'none' : 'block';
-  }
-
-  function updateDots() {
-    document.querySelectorAll('.popup-dots .dot').forEach((dot, i) => {
-      dot.style.backgroundColor = i === currentIndex ? 'white' : 'transparent';
-    });
-  }
-
-  images.forEach((img, index) => {
-    img.addEventListener('click', () => {
-      if (!isPopupOpen) {
-        currentIndex = index;
-        popupImage.src = images[currentIndex].src; // Ensure correct image appears
-        updatePopupImage(currentIndex, 'next');
-        popup.style.display = 'flex';
-        mainContainer.style.opacity = '0.3';
-        isPopupOpen = true;
-        startAutoSlide();
-      }
-    });
-  });
-
-  closeButton.addEventListener('click', () => {
-    popup.style.display = 'none';
-    mainContainer.style.opacity = '1';
-    isPopupOpen = false;
-    clearInterval(slideInterval);
-  });
-
-  forwardButton.addEventListener('click', () => {
-    navigateForward();
-  });
-
-  backwardButton.addEventListener('click', () => {
-    navigateBackward();
-  });
-
-  let startX = 0;
-  popup.addEventListener('touchstart', (e) => {
-    startX = e.touches[0].clientX;
-  });
-
-  popup.addEventListener('touchend', (e) => {
-    const endX = e.changedTouches[0].clientX;
-    const deltaX = endX - startX;
-
-    if (Math.abs(deltaX) > 50) {
-      if (deltaX > 0) {
-        navigateBackward();
-      } else {
-        navigateForward();
-      }
-    }
-  });
-
-  images.forEach(() => {
+function createDots() {
+  sliderDots.innerHTML = '';
+  imageSources.forEach((_, index) => {
     const dot = document.createElement('div');
     dot.classList.add('dot');
-    popupDotsContainer.appendChild(dot);
+    if (index === currentIndex) dot.classList.add('active');
+    dot.addEventListener('click', () => openPopup(index));
+    sliderDots.appendChild(dot);
   });
+}
 
-  document.querySelectorAll('.popup-dots .dot').forEach((dot, i) => {
-    dot.addEventListener('click', () => {
-      updatePopupImage(i, i > currentIndex ? 'next' : 'prev');
-    });
+function updateDots() {
+  document.querySelectorAll('.dot').forEach((dot, index) => {
+    dot.classList.toggle('active', index === currentIndex);
   });
+}
 
-  updateArrows();
-  updateDots();
+function startSlideshow() {
+  stopSlideshow();
+  slideshowInterval = setInterval(() => {
+    if (currentIndex < imageSources.length - 1) {
+      showNextImage();
+    } else {
+      currentIndex = 0;
+      updateImage();
+    }
+  }, 3000);
+}
+
+function stopSlideshow() {
+  clearInterval(slideshowInterval);
+}
+
+closeButton.addEventListener('click', closePopup);
+prevButton.addEventListener('click', showPrevImage);
+nextButton.addEventListener('click', showNextImage);
+
+popup.addEventListener('click', (e) => {
+  if (e.target === popup) {
+    closePopup();
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (popup.style.display === 'flex') {
+    if (e.key === 'ArrowLeft') {
+      showPrevImage();
+    } else if (e.key === 'ArrowRight') {
+      showNextImage();
+    } else if (e.key === 'Escape') {
+      closePopup();
+    }
+  }
 });
