@@ -42,9 +42,8 @@ imageSources.forEach((src, index) => {
 
 function openPopup(index) {
   currentIndex = index;
-  popupImage.src = imageSources[currentIndex];
   popup.style.display = 'flex';
-  updateNavigationButtons();
+  updateImage();
   createDots();
 }
 
@@ -52,30 +51,26 @@ function closePopup() {
   popup.style.display = 'none';
 }
 
-function updateNavigationButtons() {
-  prevButton.style.display = currentIndex === 0 ? 'none' : 'block';
-  nextButton.style.display =
-    currentIndex === imageSources.length - 1 ? 'none' : 'block';
-}
-
 function showPrevImage() {
-  if (currentIndex > 0) {
-    currentIndex--;
-    updateImage();
-  }
+  currentIndex = (currentIndex - 1 + imageSources.length) % imageSources.length;
+  updateImage('slide-left');
 }
 
 function showNextImage() {
-  if (currentIndex < imageSources.length - 1) {
-    currentIndex++;
-    updateImage();
-  }
+  currentIndex = (currentIndex + 1) % imageSources.length;
+  updateImage('slide-right');
 }
 
-function updateImage() {
-  popupImage.src = imageSources[currentIndex];
-  updateNavigationButtons();
-  updateDots();
+function updateImage(animationClass = 'fade-in') {
+  popupImage.classList.remove('fade-in', 'slide-left', 'slide-right');
+  popupImage.style.opacity = '0';
+
+  setTimeout(() => {
+    popupImage.src = imageSources[currentIndex];
+    popupImage.classList.add(animationClass);
+    popupImage.style.opacity = '1';
+    updateDots();
+  }, 200);
 }
 
 function createDots() {
