@@ -14,7 +14,6 @@ body {
     min-height: 100vh;
 }
 
-
 h1 {
     color: white;
     margin-bottom: 10px;
@@ -23,7 +22,6 @@ h1 {
     text-transform: uppercase;
     letter-spacing: 1.5px;
     background: linear-gradient(45deg, #ff8c00, #ff0080, #8a2be2);
-
 }
 
 .main-container {
@@ -34,7 +32,6 @@ h1 {
     padding: 10px;
 }
 
-
 .main-container img {
     width: 100%;
     height: 200px;
@@ -42,15 +39,11 @@ h1 {
     cursor: pointer;
     transition: transform 0.3s ease;
     border-radius: 5px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
 }
 
 .main-container img:hover {
     transform: scale(1.05);
 }
-
 
 .popup {
     display: none;
@@ -66,91 +59,94 @@ h1 {
     z-index: 1000;
 }
 
-
 .popup-image {
     width: 500px;
     height: 400px;
     object-fit: cover;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
-    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
     opacity: 1;
 }
 
 
-.popup-image.fade-in {
-    animation: fadeIn 0.4s ease-in-out;
-}
-
-
-.popup-image.slide-left {
-    animation: slideLeft 0.4s ease-in-out;
-}
-
-
-.popup-image.slide-right {
-    animation: slideRight 0.4s ease-in-out;
-}
-
-
-@keyframes fadeIn {
+@keyframes flip {
     from {
+        transform: rotateY(90deg);
         opacity: 0;
-        transform: scale(0.95);
     }
 
     to {
+        transform: rotateY(0);
         opacity: 1;
-        transform: scale(1);
     }
 }
 
+.popup-image.flip {
+    animation: flip 0.5s ease-in-out;
+}
 
-@keyframes slideLeft {
+
+@keyframes rotateIn {
     from {
+        transform: rotate(-180deg) scale(0.5);
         opacity: 0;
-        transform: translateX(-50px);
     }
 
     to {
+        transform: rotate(0) scale(1);
         opacity: 1;
-        transform: translateX(0);
     }
 }
 
+.popup-image.rotate-in {
+    animation: rotateIn 0.5s ease-out;
+}
 
-@keyframes slideRight {
-    from {
+
+@keyframes bounce {
+    0% {
+        transform: translateY(-50px);
         opacity: 0;
-        transform: translateX(50px);
+    }
+
+    50% {
+        transform: translateY(10px);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.popup-image.bounce {
+    animation: bounce 0.5s ease-in-out;
+}
+
+
+@keyframes zoomSpin {
+    from {
+        transform: scale(0.5) rotate(-10deg);
+        opacity: 0;
     }
 
     to {
+        transform: scale(1) rotate(0);
         opacity: 1;
-        transform: translateX(0);
     }
 }
 
-
-
-.close-btn {
-    border: none;
-    color: white;
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 10px;
-    border-radius: 50%;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: none;
+.popup-image.zoom-spin {
+    animation: zoomSpin 0.6s ease-in-out;
 }
 
+
+.close-btn,
 .backward,
 .forward {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
     font-size: 2rem;
     color: white;
     cursor: pointer;
@@ -164,6 +160,10 @@ h1 {
     right: 10%;
 }
 
+.close-btn {
+    top: 20px;
+    right: 20px;
+}
 
 .slider-dots {
     position: absolute;
@@ -172,40 +172,23 @@ h1 {
     transform: translateX(-50%);
     display: flex;
     gap: 8px;
-    z-index: 1002;
-}
-
-.dot {
-    width: 6px;
-    height: 6px;
-    background-color: rgba(255, 255, 255, 0.6);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    border: 2px solid white;
+    z-index: '1001';
     margin-bottom: 120px;
 }
 
-.dot.active {
+.dot {
+    width: 8px;
+    height: 8px;
     background-color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.dot.active {
+    background-color: yellow;
     transform: scale(1.4);
 }
-
-.dot:hover {
-    background-color: rgba(255, 255, 255, 0.9);
-}
-
-
-.popup-container {
-    display: flex;
-    position: relative;
-    width: 60vw;
-    max-width: 1000px;
-    height: auto;
-    max-height: 70vh;
-    overflow: hidden;
-}
-
 
 @media (max-width: 1440px) {
     .popup-image {

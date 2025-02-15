@@ -53,55 +53,44 @@ function closePopup() {
 
 function showPrevImage() {
   currentIndex = (currentIndex - 1 + imageSources.length) % imageSources.length;
-  updateImage('slide-left');
+  updateImage();
 }
 
 function showNextImage() {
   currentIndex = (currentIndex + 1) % imageSources.length;
-  updateImage('slide-right');
+  updateImage();
 }
 
-function updateImage(animationClass = 'fade-in') {
-  popupImage.classList.remove('fade-in', 'slide-left', 'slide-right');
-  popupImage.style.opacity = '0';
+function updateImage() {
+  const animations = ['flip', 'rotate-in', 'bounce', 'zoom-spin'];
+  const randomAnimation =
+    animations[Math.floor(Math.random() * animations.length)];
+
+  popupImage.classList.remove('flip', 'rotate-in', 'bounce', 'zoom-spin');
 
   setTimeout(() => {
     popupImage.src = imageSources[currentIndex];
-    popupImage.classList.add(animationClass);
-    popupImage.style.opacity = '1';
-    updateDots();
+    popupImage.classList.add(randomAnimation);
+    createDots();
   }, 200);
 }
 
 function createDots() {
   sliderDots.innerHTML = '';
+
   imageSources.forEach((_, index) => {
     const dot = document.createElement('div');
     dot.classList.add('dot');
-    if (index === currentIndex) dot.classList.add('active');
+
+    if (index === currentIndex) {
+      dot.classList.add('active');
+    }
+
     dot.addEventListener('click', () => openPopup(index));
     sliderDots.appendChild(dot);
-  });
-}
-
-function updateDots() {
-  document.querySelectorAll('.dot').forEach((dot, index) => {
-    dot.classList.toggle('active', index === currentIndex);
   });
 }
 
 closeButton.addEventListener('click', closePopup);
 prevButton.addEventListener('click', showPrevImage);
 nextButton.addEventListener('click', showNextImage);
-
-document.addEventListener('keydown', (e) => {
-  if (popup.style.display === 'flex') {
-    if (e.key === 'ArrowLeft') {
-      showPrevImage();
-    } else if (e.key === 'ArrowRight') {
-      showNextImage();
-    } else if (e.key === 'Escape') {
-      closePopup();
-    }
-  }
-});
